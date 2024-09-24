@@ -9,30 +9,28 @@ import {
   FlatList,
   StyleSheet,
 } from "react-native";
-import { db, auth } from "../../src/lib/firebase"; // Importa Firestore e auth
-import { collection, addDoc, query, where, getDocs } from "firebase/firestore"; // Funções do Firestore
+import { db, auth } from "../../src/lib/firebase";
+import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-} from "firebase/auth"; // Funções de Auth
+} from "firebase/auth";
 
 export default function App() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [expressao, setExpressao] = useState("");
   const [mensagem, setMensagem] = useState("");
-  const [cadastrado, setCadastrado] = useState(true); // Alterna entre registro/login
-  const [listaExpressoes, setListaExpressoes] = useState([]); // Armazena expressões
+  const [cadastrado, setCadastrado] = useState(true);
+  const [listaExpressoes, setListaExpressoes] = useState([]);
 
   const handleAuth = async () => {
     try {
       if (cadastrado) {
-        // Login
         await signInWithEmailAndPassword(auth, email, password);
         setMensagem("Login bem-sucedido!");
-        fetchUserExpressions(); // Busca expressões após login
+        fetchUserExpressions();
       } else {
-        // Registro
         await createUserWithEmailAndPassword(auth, email, password);
         setMensagem("Registro bem-sucedido!");
       }
@@ -46,12 +44,12 @@ export default function App() {
       try {
         await addDoc(collection(db, "mathExpressions"), {
           expression: `${expressao} = ${evaluate(expressao)}`,
-          userId: auth.currentUser.uid, // Vincula expressão ao usuário
+          userId: auth.currentUser.uid,
           timestamp: new Date(),
         });
         setMensagem("Expressão registrada!");
         setExpressao("");
-        fetchUserExpressions(); // Atualiza a lista após registrar uma nova expressão
+        fetchUserExpressions();
       } catch (error) {
         console.error("Erro ao registrar expressão: ", error);
         setMensagem("Erro ao registrar expressão.");
@@ -79,9 +77,9 @@ export default function App() {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
-        fetchUserExpressions(); // Busca expressões se o usuário estiver logado
+        fetchUserExpressions();
       } else {
-        setListaExpressoes([]); // Limpa expressões se o usuário estiver desconectado
+        setListaExpressoes([]);
       }
     });
 
