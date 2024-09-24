@@ -1,19 +1,18 @@
 import React from "react";
 import { Stack } from "expo-router";
-import { Provider as PaperProvider } from "react-native-paper";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
-const queryClient = new QueryClient();
+import {
+  MD3LightTheme as DefaultTheme,
+  PaperProvider,
+} from "react-native-paper";
 
 const Layout = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <PaperProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        </Stack>
-      </PaperProvider>
-    </QueryClientProvider>
+    <PaperProvider theme={DefaultTheme}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="signup" options={{ headerShown: false }} />
+      </Stack>
+    </PaperProvider>
   );
 };
 
